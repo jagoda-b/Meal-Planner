@@ -4,13 +4,40 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
-
         Scanner scanner = new Scanner(System.in);
 
-        String mealType = getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
-        String mealName = getInfoFromUser("Input the meal's name: ", scanner);
-        String ingredients = getInfoFromUser("Input the ingredients: ", scanner);
+        while (true){
+            Utility.getInfoFromUser("What would you like to do (add, show, exit)?", scanner);
+            String command = scanner.nextLine().toLowerCase();
+
+
+
+            if (command.equals("exit"))
+                break;
+
+            switch (command) {
+                case "add" :
+
+                    break;
+
+                case "show" :
+
+                    break;
+
+
+            }
+
+        }
+
+
+
+        Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
+
+
+
+        String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
+        String mealName = Utility.getInfoFromUser("Input the meal's name: ", scanner);
+        String ingredients = Utility.getInfoFromUser("Input the ingredients: ", scanner);
 
         Meal meal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
 
@@ -21,8 +48,5 @@ public class Main {
         scanner.close();
     }
 
-    private static String getInfoFromUser(String question, Scanner scanner) {
-        System.out.println(question);
-        return scanner.nextLine();
-    }
+
 }

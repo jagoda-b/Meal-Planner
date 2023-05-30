@@ -29,8 +29,10 @@ public class Utility {
     }
 
     public static boolean validateIngredients(String ingredients) {
-        //TO DO
-        return false;
+        Pattern p = Pattern.compile("^( ?[ A-Za-z] ?)(,[A-Z]+)*( ?[A-Za-z] ?(, ?[A-Za-z]+ ?)*)*$");
+        Matcher m = p.matcher(ingredients);
+
+        return m.matches();
     }
 
 }

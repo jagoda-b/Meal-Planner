@@ -34,6 +34,9 @@ public class Main {
 
 
                     String ingredients = Utility.getInfoFromUser("Input the ingredients: ", scanner);
+                    while (!Utility.validateIngredients(ingredients)){
+                        ingredients =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
+                    }
 
                     Meal newMeal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
 

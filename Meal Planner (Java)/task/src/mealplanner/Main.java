@@ -1,52 +1,42 @@
 package mealplanner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
+
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        List<Meal> meals = new ArrayList<>();
+        boolean menuFlag = true;
 
-        while (true){
-            Utility.getInfoFromUser("What would you like to do (add, show, exit)?", scanner);
-            String command = scanner.nextLine().toLowerCase();
+        while (menuFlag){
+            String command = Utility.getInfoFromUser("What would you like to do (add, show, exit)?", scanner);
 
-
-
-            if (command.equals("exit"))
-                break;
 
             switch (command) {
                 case "add" :
-
+                    Utility.addCommand(scanner, meals);
                     break;
 
                 case "show" :
-
+                    Utility.showCommand(meals);
                     break;
 
-
+                case "exit" :
+                    System.out.println("Bye!");
+                    menuFlag = false;
             }
 
         }
 
-
-
-        Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
-
-
-
-        String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
-        String mealName = Utility.getInfoFromUser("Input the meal's name: ", scanner);
-        String ingredients = Utility.getInfoFromUser("Input the ingredients: ", scanner);
-
-        Meal meal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
-
-        System.out.println(meal.toString());
-
-        System.out.println("The meal has been added!");
-
         scanner.close();
     }
+
+
+
 
 
 }

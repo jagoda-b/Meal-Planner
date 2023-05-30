@@ -1,5 +1,7 @@
 package mealplanner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Utility {
@@ -9,8 +11,14 @@ public class Utility {
     }
 
     public static boolean validateMealType(String mealType) {
-        //TO DO
+
+        for (MealType meal : MealType.values())
+            if (meal.name().equalsIgnoreCase(mealType)) {
+                return true;
+
+            }
         return false;
+
     }
 
     public static boolean validateMealName(String mealName) {

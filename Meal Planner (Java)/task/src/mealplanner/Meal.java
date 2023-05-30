@@ -36,7 +36,7 @@ public class Meal {
         sb.append("Ingredients:").append("\n");
 
         for (String ingredient : ingredients) {
-            sb.append(ingredient).append("\n");
+            sb.append(ingredient.strip()).append("\n");
         }
 
         return sb.toString();

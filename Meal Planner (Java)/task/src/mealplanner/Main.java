@@ -14,8 +14,10 @@ public class Main {
         while (true){
             String command = Utility.getInfoFromUser("What would you like to do (add, show, exit)?", scanner);
 
-            if (command.equals("exit"))
+            if (command.equals("exit")) {
+                System.out.println("Bye!");
                 break;
+            }
 
             switch (command) {
                 case "add" :
@@ -40,13 +42,15 @@ public class Main {
 
                     Meal newMeal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
 
-                    System.out.println(newMeal.toString());
                     meals.add(newMeal);
                     System.out.println("The meal has been added!");
                     break;
 
                 case "show" :
-
+                    System.out.println("");
+                    if (meals.isEmpty()){
+                        System.out.println("No meals saved. Add a meal first.");
+                    }
 
                     for ( Meal meal : meals) {
                         System.out.println(meal.toString());

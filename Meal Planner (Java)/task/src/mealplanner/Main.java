@@ -18,11 +18,11 @@ public class Main {
 
             switch (command) {
                 case "add" :
-                    addCommand(scanner, meals);
+                    Utility.addCommand(scanner, meals);
                     break;
 
                 case "show" :
-                    showCommand(meals);
+                    Utility.showCommand(meals);
                     break;
 
                 case "exit" :
@@ -35,41 +35,8 @@ public class Main {
         scanner.close();
     }
 
-    private static void addCommand(Scanner scanner, List<Meal> meals) {
-        Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
-
-        String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
-        while (!Utility.validateMealType(mealType)){
-            mealType =  Utility.getInfoFromUser("Wrong meal category! Choose from: breakfast, lunch, dinner.", scanner);
-        }
 
 
-        String mealName = Utility.getInfoFromUser("Input the meal's name: ", scanner);
-        while (!Utility.validateMealName(mealName)){
-            mealName =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
-        }
 
-
-        String ingredients = Utility.getInfoFromUser("Input the ingredients: ", scanner);
-        while (!Utility.validateIngredients(ingredients)){
-            ingredients =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
-        }
-
-        Meal newMeal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
-
-        meals.add(newMeal);
-        System.out.println("The meal has been added!");
-
-    }
-
-    private static void showCommand(List<Meal> meals) {
-        if (meals.isEmpty()){
-            System.out.println("No meals saved. Add a meal first.");
-        }
-
-        for ( Meal meal : meals) {
-            System.out.println(meal.toString());
-        }
-    }
 
 }

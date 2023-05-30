@@ -20,6 +20,7 @@ public class Main {
             switch (command) {
                 case "add" :
                     Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
+
                     String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
                     while (!Utility.validateMealType(mealType)){
                         mealType =  Utility.getInfoFromUser("Wrong meal category! Choose from: breakfast, lunch, dinner.", scanner);
@@ -27,6 +28,11 @@ public class Main {
 
 
                     String mealName = Utility.getInfoFromUser("Input the meal's name: ", scanner);
+                    while (!Utility.validateMealName(mealName)){
+                        mealName =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
+                    }
+
+
                     String ingredients = Utility.getInfoFromUser("Input the ingredients: ", scanner);
 
                     Meal newMeal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();

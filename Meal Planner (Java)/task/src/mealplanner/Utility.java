@@ -1,5 +1,6 @@
 package mealplanner;
 
+import java.sql.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -34,14 +35,30 @@ public class Utility {
         return m.matches();
     }
 
-    public static void showCommand(List<Meal> meals) {
-        if (meals.isEmpty()){
+    public static void showCommand(Connection connection) throws SQLException {
+        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals");
+        ResultSet allMeals = getAllMeals.executeQuery();
+
+
+        if (allMeals.wasNull()){
             System.out.println("No meals saved. Add a meal first.");
         }
 
-        for ( Meal meal : meals) {
-            System.out.println(meal.toString());
+        while (allMeals.next()) {
+            System.out.println("Category: " + allMeals.getString("category"));
+            System.out.println("Name: " + allMeals.getString("meal"));
+
+            PreparedStatement getIngredients = connection.prepareStatement("SELECT * FROM ingredients WHERE meal_id = ?");
+            getIngredients.setInt(1, allMeals.getInt("meal_id"));
+            ResultSet ingredients = getIngredients.executeQuery( );
+
+            while (ingredients.next()){
+                System.out.println(ingredients.getString("ingredient"));
+            }
+
+
         }
+
     }
 
     public static void addCommand(Scanner scanner, List<Meal> meals) {

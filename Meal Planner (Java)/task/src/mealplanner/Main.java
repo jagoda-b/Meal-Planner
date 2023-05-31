@@ -19,14 +19,8 @@ public class Main {
         Statement statement = connection.createStatement();
 
 
-        ResultSet rs = statement.executeQuery("SELECT * FROM meals");
-        while (rs.next()) {
-            System.out.println("category = " + rs.getString("category"));
-            System.out.println("meal = " + rs.getString("meal"));
-            System.out.println("meal_id = " + rs.getInt("meal_id"));
-        }
-        statement.close();
-        connection.close();
+
+
 
 
         Scanner scanner = new Scanner(System.in);
@@ -43,7 +37,7 @@ public class Main {
                     break;
 
                 case "show" :
-                    Utility.showCommand(meals);
+                    Utility.showCommand(connection);
                     break;
 
                 case "exit" :
@@ -54,6 +48,8 @@ public class Main {
         }
 
         scanner.close();
+        statement.close();
+        connection.close();
     }
 
 

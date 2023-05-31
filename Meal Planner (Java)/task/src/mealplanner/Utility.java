@@ -35,32 +35,7 @@ public class Utility {
         return m.matches();
     }
 
-    public static void showCommand(Connection connection) throws SQLException {
-        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals");
-        ResultSet allMeals = getAllMeals.executeQuery();
-
-
-        if (allMeals.wasNull()){
-            System.out.println("No meals saved. Add a meal first.");
-        }
-
-        while (allMeals.next()) {
-            System.out.println("Category: " + allMeals.getString("category"));
-            System.out.println("Name: " + allMeals.getString("meal"));
-
-            PreparedStatement getIngredients = connection.prepareStatement("SELECT * FROM ingredients WHERE meal_id = ?");
-            getIngredients.setInt(1, allMeals.getInt("meal_id"));
-            ResultSet ingredients = getIngredients.executeQuery();
-
-            while (ingredients.next()){
-                System.out.println(ingredients.getString("ingredient"));
-            }
-
-        }
-
-    }
-
-    public static void addCommand(Scanner scanner, List<Meal> meals, Connection connection) throws SQLException {
+    public static Meal addCommand(Scanner scanner)  {
         Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
 
         String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
@@ -80,61 +55,12 @@ public class Utility {
             ingredients =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
         }
 
-        Meal newMeal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
-
-        meals.add(newMeal);
-        addMealtoDB(newMeal,connection);
-
+        return mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
 
     }
 
-    public static void addMealtoDB(Meal meal, Connection connection) throws SQLException {
-        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet allMeals = getAllMeals.executeQuery();
-
-        PreparedStatement getAllIngredients = connection.prepareStatement("SELECT * FROM ingredients", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet allIngredients = getAllIngredients.executeQuery();
-
-        allMeals.last();
-        allIngredients.last();
-
-
-        int mealID = allMeals.getInt("meal_id") + 1;
-        System.out.println(mealID);
-        int ingredientID = allIngredients.getInt("ingredient_id") + 1;
-        System.out.println(ingredientID);
-
-
-        PreparedStatement addMeal = connection.prepareStatement("INSERT INTO meals "
-                + "(category, meal, meal_id)"
-                + " VALUES (?, ?, ?) ");
-
-        addMeal.setString(1, meal.getType());
-        addMeal.setString(2, meal.getName());
-        addMeal.setInt(3,mealID);
-
-        addMeal.executeUpdate();
-
-        for(String ingredient : meal.getIngredients()){
-            PreparedStatement addIngredient = connection.prepareStatement("INSERT INTO ingredients "
-                    + "(ingredient, ingredient_id, meal_id)"
-                    + " VALUES (?, ?, ?) ");
-
-            addIngredient.setString(1, ingredient);
-            addIngredient.setInt(2, ingredientID);
-            addIngredient.setInt(3, mealID);
-            ingredientID++;
-
-            addIngredient.executeUpdate();
-        }
-
-
-
-
-        System.out.println("The meal has been added!");
-
-    }
 
     private Utility() {}  //to prevent accidental instantiation
+
 
 }

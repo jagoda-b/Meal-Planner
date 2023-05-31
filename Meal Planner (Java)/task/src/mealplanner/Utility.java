@@ -50,18 +50,17 @@ public class Utility {
 
             PreparedStatement getIngredients = connection.prepareStatement("SELECT * FROM ingredients WHERE meal_id = ?");
             getIngredients.setInt(1, allMeals.getInt("meal_id"));
-            ResultSet ingredients = getIngredients.executeQuery( );
+            ResultSet ingredients = getIngredients.executeQuery();
 
             while (ingredients.next()){
                 System.out.println(ingredients.getString("ingredient"));
             }
 
-
         }
 
     }
 
-    public static void addCommand(Scanner scanner, List<Meal> meals) {
+    public static void addCommand(Scanner scanner, List<Meal> meals, Connection connection) throws SQLException {
         Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
 
         String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
@@ -84,6 +83,54 @@ public class Utility {
         Meal newMeal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
 
         meals.add(newMeal);
+        addMealtoDB(newMeal,connection);
+
+
+    }
+
+    public static void addMealtoDB(Meal meal, Connection connection) throws SQLException {
+        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet allMeals = getAllMeals.executeQuery();
+
+        PreparedStatement getAllIngredients = connection.prepareStatement("SELECT * FROM ingredients", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet allIngredients = getAllIngredients.executeQuery();
+
+        allMeals.last();
+        allIngredients.last();
+
+
+        int mealID = allMeals.getInt("meal_id") + 1;
+        System.out.println(mealID);
+        int ingredientID = allIngredients.getInt("ingredient_id") + 1;
+        System.out.println(ingredientID);
+
+
+        PreparedStatement addMeal = connection.prepareStatement("INSERT INTO meals "
+                + "(category, meal, meal_id)"
+                + " VALUES (?, ?, ?) ");
+
+        addMeal.setString(1, meal.getType());
+        addMeal.setString(2, meal.getName());
+        addMeal.setInt(3,mealID);
+
+        addMeal.executeUpdate();
+
+        for(String ingredient : meal.getIngredients()){
+            PreparedStatement addIngredient = connection.prepareStatement("INSERT INTO ingredients "
+                    + "(ingredient, ingredient_id, meal_id)"
+                    + " VALUES (?, ?, ?) ");
+
+            addIngredient.setString(1, ingredient);
+            addIngredient.setInt(2, ingredientID);
+            addIngredient.setInt(3, mealID);
+            ingredientID++;
+
+            addIngredient.executeUpdate();
+        }
+
+
+
+
         System.out.println("The meal has been added!");
 
     }

@@ -33,7 +33,7 @@ public class Main {
 
             switch (command) {
                 case "add" :
-                    Utility.addCommand(scanner, meals);
+                    Utility.addCommand(scanner, meals, connection);
                     break;
 
                 case "show" :

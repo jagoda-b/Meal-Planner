@@ -3,34 +3,21 @@ package mealplanner;
 import java.sql.*;
 
 public class MealDAO {
-    private final static String TABLE_MEALS = "meals";
-    private final static String COL_MEALS_ID = "meal_id";
-    private final static String COL_MEALS_CATEGORY = "category";
-    private final static String COL_MEALS_NAME = "meal";
 
-    private final static String TABLE_INGREDIENTS = "ingredients";
-    private final static String COL_INGREDIENTS_ID = "ingredient_id";
-    private final static String COL_INGREDIENTS_NAME = "ingredient";
-    private final static String COL_INGREDIENTS_MEAL = "meal_id";
-
-    private String dbUrl = "jdbc:postgresql:meals_db";
-    private String user = "postgres";
-    private String pass = "1111";
+    private final String dbUrl = "jdbc:postgresql:meals_db";
+    private final String user = "postgres";
+    private final String pass = "1111";
 
     private Connection connection;
 
 
-    protected Connection connection() throws SQLException {
+    protected Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(dbUrl, user, pass);
             connection.setAutoCommit(true);
         }
         createTables();
         return connection;
-    }
-    public void initConnection() throws SQLException {
-        connection = connection();
-        createTables();
     }
 
     public void closeConnection() {
@@ -132,9 +119,5 @@ public class MealDAO {
         getAllMeals.close();
 
     }
-
-
-
-
 
 }

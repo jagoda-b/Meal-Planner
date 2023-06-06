@@ -9,7 +9,7 @@ import java.sql.*;
 public class Main {
     public static void main(String[] args) throws SQLException {
         MealDAO mealDAO = new MealDAO();
-        mealDAO.initConnection();
+        mealDAO.getConnection();
         Scanner scanner = new Scanner(System.in);
 
         boolean menuFlag = true;
@@ -35,6 +35,7 @@ public class Main {
         }
 
         scanner.close();
+        mealDAO.closeConnection();
 
     }
 

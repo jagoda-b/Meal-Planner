@@ -1,5 +1,6 @@
 package mealplanner;
 
+import java.sql.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -34,17 +35,7 @@ public class Utility {
         return m.matches();
     }
 
-    public static void showCommand(List<Meal> meals) {
-        if (meals.isEmpty()){
-            System.out.println("No meals saved. Add a meal first.");
-        }
-
-        for ( Meal meal : meals) {
-            System.out.println(meal.toString());
-        }
-    }
-
-    public static void addCommand(Scanner scanner, List<Meal> meals) {
+    public static Meal addCommand(Scanner scanner)  {
         Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
 
         String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
@@ -64,13 +55,12 @@ public class Utility {
             ingredients =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
         }
 
-        Meal newMeal = mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
-
-        meals.add(newMeal);
-        System.out.println("The meal has been added!");
+        return mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
 
     }
 
+
     private Utility() {}  //to prevent accidental instantiation
+
 
 }

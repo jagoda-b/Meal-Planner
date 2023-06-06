@@ -94,12 +94,7 @@ public class MealDAO {
 
 
     public  void showMealCategory(String mealCategory) throws SQLException {
-//
-        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals \n" +
-                                                                        "LEFT JOIN ingredients \n" +
-                                                                        "ON meals.meal_id = ingredients.meal_id\n" +
-                                                                        "WHERE meals.category = ?;",
-                                                                        ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals WHERE category = ?");
         getAllMeals.setString(1, mealCategory);
         ResultSet allMeals = getAllMeals.executeQuery();
 
@@ -117,12 +112,13 @@ public class MealDAO {
 
             System.out.println("Name: " + allMeals.getString("meal"));
 
-            int meal_id = allMeals.getInt("meal_id");
+            PreparedStatement getIngredients = connection.prepareStatement("SELECT * FROM ingredients WHERE meal_id = ?");
+            getIngredients.setInt(1, allMeals.getInt("meal_id"));
+            ResultSet ingredients = getIngredients.executeQuery();
             System.out.println("Ingredients:");
-            do{
-                System.out.println(allMeals.getString("ingredient").strip());
-            } while (allMeals.next() && allMeals.getInt("meal_id") == meal_id);
-            allMeals.previous();
+            while (ingredients.next()){
+                System.out.println(ingredients.getString("ingredient").strip());
+            }
 
         }
 

@@ -10,7 +10,7 @@ public class Utility {
         return scanner.nextLine();
     }
 
-    public static boolean validateMealType(String mealType) {
+    public static boolean validateMealCategory(String mealType) {
 
         for (MealCategory meal : MealCategory.values())
             if (meal.name().equalsIgnoreCase(mealType)) {
@@ -36,9 +36,9 @@ public class Utility {
     public static Meal addCommand(Scanner scanner)  {
         Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
 
-        String mealType = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
-        while (!Utility.validateMealType(mealType)){
-            mealType =  Utility.getInfoFromUser("Wrong meal category! Choose from: breakfast, lunch, dinner.", scanner);
+        String mealCategory = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
+        while (!Utility.validateMealCategory(mealCategory)){
+            mealCategory =  Utility.getInfoFromUser("Wrong meal category! Choose from: breakfast, lunch, dinner.", scanner);
         }
 
 
@@ -53,13 +53,18 @@ public class Utility {
             ingredients =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
         }
 
-        return mealBuilder.addCategory(mealType).addName(mealName).addIngredients(ingredients).build();
+        return mealBuilder.addCategory(mealCategory).addName(mealName).addIngredients(ingredients).build();
 
     }
 
-    public static void showCommand(Scanner scanner) {
-        System.out.println("Which category do you want to print (breakfast, lunch, dinner)?");
-        String mealCategory = scanner.nextLine();
+    public static String showCommand(Scanner scanner) {
+
+        String mealCategory = Utility.getInfoFromUser("Which category do you want to print (breakfast, lunch, dinner)?", scanner);
+        while (!Utility.validateMealCategory(mealCategory)){
+            mealCategory =  Utility.getInfoFromUser("Wrong meal category! Choose from: breakfast, lunch, dinner.", scanner);
+        }
+
+        return mealCategory;
     }
 
 

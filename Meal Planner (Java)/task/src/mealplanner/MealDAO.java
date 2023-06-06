@@ -93,17 +93,23 @@ public class MealDAO {
     }
 
 
-    public  void showFromDB() throws SQLException {
-        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals");
+    public  void showMealCategory(String mealCategory) throws SQLException {
+        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals WHERE category = ?");
+        getAllMeals.setString(1, mealCategory);
         ResultSet allMeals = getAllMeals.executeQuery();
 
 
-        if (allMeals.wasNull()){
-            System.out.println("No meals saved. Add a meal first.");
+        if (!allMeals.isBeforeFirst()){
+            System.out.println("No meals found.");
+        }
+        else {
+            System.out.println("Category: " + mealCategory);
+            System.out.println("");
         }
 
+
         while (allMeals.next()) {
-            System.out.println("Category: " + allMeals.getString("category"));
+
             System.out.println("Name: " + allMeals.getString("meal"));
 
             PreparedStatement getIngredients = connection.prepareStatement("SELECT * FROM ingredients WHERE meal_id = ?");

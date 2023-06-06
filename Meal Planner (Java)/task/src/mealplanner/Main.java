@@ -24,7 +24,8 @@ public class Main {
                     break;
 
                 case "show" :
-                    mealDAO.showFromDB();
+                    String mealCategory = Utility.showCommand(scanner);
+                    mealDAO.showMealCategory(mealCategory);
                     break;
 
                 case "exit" :

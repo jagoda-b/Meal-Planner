@@ -69,7 +69,7 @@ public class MealDAO {
                 + "(category, meal, meal_id)"
                 + " VALUES (?, ?, ?) ");
 
-        addMeal.setString(1, meal.getType());
+        addMeal.setString(1, meal.getCategory());
         addMeal.setString(2, meal.getName());
         addMeal.setInt(3,mealID);
 
@@ -93,26 +93,36 @@ public class MealDAO {
     }
 
 
-    public  void showFromDB() throws SQLException {
-        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals");
+    public  void showMealCategory(String mealCategory) throws SQLException {
+//
+        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals \n" +
+                                                                        "LEFT JOIN ingredients \n" +
+                                                                        "ON meals.meal_id = ingredients.meal_id\n" +
+                                                                        "WHERE meals.category = ?;",
+                                                                        ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        getAllMeals.setString(1, mealCategory);
         ResultSet allMeals = getAllMeals.executeQuery();
 
 
-        if (allMeals.wasNull()){
-            System.out.println("No meals saved. Add a meal first.");
+        if (!allMeals.isBeforeFirst()){
+            System.out.println("No meals found.");
+        }
+        else {
+            System.out.println("Category: " + mealCategory);
+            System.out.println("");
         }
 
+
         while (allMeals.next()) {
-            System.out.println("Category: " + allMeals.getString("category"));
+
             System.out.println("Name: " + allMeals.getString("meal"));
 
-            PreparedStatement getIngredients = connection.prepareStatement("SELECT * FROM ingredients WHERE meal_id = ?");
-            getIngredients.setInt(1, allMeals.getInt("meal_id"));
-            ResultSet ingredients = getIngredients.executeQuery();
+            int meal_id = allMeals.getInt("meal_id");
             System.out.println("Ingredients:");
-            while (ingredients.next()){
-                System.out.println(ingredients.getString("ingredient").strip());
-            }
+            do{
+                System.out.println(allMeals.getString("ingredient").strip());
+            } while (allMeals.next() && allMeals.getInt("meal_id") == meal_id);
+            allMeals.previous();
 
         }
 

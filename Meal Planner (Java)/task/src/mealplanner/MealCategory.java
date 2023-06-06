@@ -1,5 +1,5 @@
 package mealplanner;
 
-public enum MealType {
+public enum MealCategory {
     breakfast, lunch, dinner
 }

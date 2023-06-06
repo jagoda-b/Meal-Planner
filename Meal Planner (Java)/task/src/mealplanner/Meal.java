@@ -5,18 +5,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Meal {
-    private final String type;
+    private final String category;
     private final String name;
     private final List<String> ingredients;
 
     public Meal(MealBuilder mealBuilder){
-        this.type = mealBuilder.type;
+        this.category = mealBuilder.category;
         this.name = mealBuilder.name;
         this.ingredients = mealBuilder.ingredients;
     }
 
-    public String getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
     public String getName() {
@@ -31,7 +31,7 @@ public class Meal {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Category: ").append(type).append("\n");
+        sb.append("Category: ").append(category).append("\n");
         sb.append("Name: ").append(name).append("\n");
         sb.append("Ingredients:").append("\n");
 
@@ -43,7 +43,7 @@ public class Meal {
     }
 
     public static class MealBuilder {
-        private String type;
+        private String category;
         private String name;
         private List<String> ingredients = new ArrayList<>();
 
@@ -51,8 +51,8 @@ public class Meal {
             return new Meal(this);
         }
 
-        public MealBuilder addType(String type) {
-            this.type = type;
+        public MealBuilder addCategory(String type) {
+            this.category = type;
             return this;
         }
 

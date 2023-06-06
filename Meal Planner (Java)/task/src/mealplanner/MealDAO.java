@@ -69,7 +69,7 @@ public class MealDAO {
                 + "(category, meal, meal_id)"
                 + " VALUES (?, ?, ?) ");
 
-        addMeal.setString(1, meal.getType());
+        addMeal.setString(1, meal.getCategory());
         addMeal.setString(2, meal.getName());
         addMeal.setInt(3,mealID);
 

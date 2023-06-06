@@ -1,7 +1,5 @@
 package mealplanner;
 
-import java.sql.*;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +12,7 @@ public class Utility {
 
     public static boolean validateMealType(String mealType) {
 
-        for (MealType meal : MealType.values())
+        for (MealCategory meal : MealCategory.values())
             if (meal.name().equalsIgnoreCase(mealType)) {
                 return true;
             }
@@ -55,8 +53,13 @@ public class Utility {
             ingredients =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
         }
 
-        return mealBuilder.addType(mealType).addName(mealName).addIngredients(ingredients).build();
+        return mealBuilder.addCategory(mealType).addName(mealName).addIngredients(ingredients).build();
 
+    }
+
+    public static void showCommand(Scanner scanner) {
+        System.out.println("Which category do you want to print (breakfast, lunch, dinner)?");
+        String mealCategory = scanner.nextLine();
     }
 
 

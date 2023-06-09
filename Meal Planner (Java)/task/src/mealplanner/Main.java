@@ -12,34 +12,12 @@ public class Main {
         mealDAO.getConnection();
         Scanner scanner = new Scanner(System.in);
 
-        boolean menuFlag = true;
-
-        while (menuFlag){
-            String command = Utility.getInfoFromUser("What would you like to do (add, show, exit)?", scanner);
-
-            switch (command) {
-                case "add" :
-                    Meal meal = Utility.addCommand(scanner);
-                    mealDAO.addMealtoDB(meal);
-                    break;
-
-                case "show" :
-                    String mealCategory = Utility.showCommand(scanner);
-                    mealDAO.showMealCategory(mealCategory);
-                    break;
-
-                case "exit" :
-                    System.out.println("Bye!");
-                    menuFlag = false;
-            }
-
-        }
+        Utility.menu(mealDAO, scanner);
 
         scanner.close();
         mealDAO.closeConnection();
 
     }
-
 
 
 

@@ -39,8 +39,8 @@ public class UtilityDB {
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS meals(category VARCHAR(64), meal VARCHAR(64), meal_id INTEGER);");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS ingredients(ingredient VARCHAR(1024), ingredient_id INT, meal_id INTEGER);");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS plan(meal_option VARCHAR(1024), category VARCHAR(64), meal_id INTEGER);");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS ingredients(ingredient VARCHAR(1024), ingredient_id INTEGER, meal_id INTEGER);");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS plan(meal_option VARCHAR(1024), category VARCHAR(64), meal_id INTEGER, day VARCHAR(10));");
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();

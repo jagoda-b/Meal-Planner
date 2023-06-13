@@ -1,7 +1,9 @@
 package mealplanner.meal;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class MealDAO {
     private Connection connection;
@@ -96,7 +98,7 @@ public class MealDAO {
     
     public Map<Integer, String> getMeals (String mealCategory) {
         
-        Map<Integer, String> meals = null;
+        Map<Integer, String> meals = new TreeMap<>();
          
         try (PreparedStatement getMeals = connection.prepareStatement("SELECT * FROM meals " +
                                                                         "WHERE meals.category = ?;")){

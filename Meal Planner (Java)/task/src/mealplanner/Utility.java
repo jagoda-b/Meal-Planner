@@ -3,6 +3,7 @@ package mealplanner;
 import mealplanner.meal.Meal;
 import mealplanner.meal.MealCategory;
 import mealplanner.meal.MealDAO;
+import mealplanner.plan.PlanDAO;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -38,7 +39,7 @@ public class Utility {
         return m.matches();
     }
 
-    public static void menu(MealDAO mealDAO, Scanner scanner) throws SQLException {
+    public static void menu(MealDAO mealDAO, PlanDAO planDAO, Scanner scanner) throws SQLException {
         boolean menuFlag = true;
 
         while (menuFlag){
@@ -56,7 +57,7 @@ public class Utility {
                     break;
 
                 case "plan" :
-                    //TO DO
+                    planDAO.createNewPlan();
 
                     break;
 

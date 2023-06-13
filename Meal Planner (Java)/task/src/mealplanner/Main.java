@@ -14,13 +14,13 @@ public class Main {
         UtilityDB utilityDB = new UtilityDB();
         Connection connection = utilityDB.getConnection();
         MealDAO mealDAO = new MealDAO(connection);
-        PlanDAO planDAO = new PlanDAO(connection);
+        PlanDAO planDAO = new PlanDAO(connection, mealDAO );
 
 
 
         Scanner scanner = new Scanner(System.in);
 
-        Utility.menu(mealDAO, scanner);
+        Utility.menu(mealDAO, planDAO, scanner);
 
         scanner.close();
         utilityDB.closeConnection();

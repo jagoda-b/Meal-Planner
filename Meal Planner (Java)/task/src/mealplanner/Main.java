@@ -2,6 +2,7 @@ package mealplanner;
 
 
 import mealplanner.Meal.MealDAO;
+import mealplanner.plan.PlanDAO;
 
 import java.util.Scanner;
 import java.sql.*;
@@ -10,9 +11,13 @@ import java.sql.*;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        MealDAO mealDAO = new MealDAO();
         UtilityDB utilityDB = new UtilityDB();
-        utilityDB.getConnection();
+        Connection connection = utilityDB.getConnection();
+        MealDAO mealDAO = new MealDAO(connection);
+        PlanDAO planDAO = new PlanDAO(connection);
+
+
+
         Scanner scanner = new Scanner(System.in);
 
         Utility.menu(mealDAO, scanner);

@@ -6,6 +6,10 @@ import java.util.Map;
 public class MealDAO {
     private Connection connection;
 
+    public MealDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     public void addMealtoDB(Meal meal) throws SQLException {
         PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet allMeals = getAllMeals.executeQuery();
@@ -57,7 +61,7 @@ public class MealDAO {
 
         PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals " +
                                                                         "LEFT JOIN ingredients " +
-                                                                        "ON meals.meal_id = ingredients.meal_id" +
+                                                                        "ON meals.meal_id = ingredients.meal_id " +
                                                                         "WHERE meals.category = ?;",
                                                                         ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         getAllMeals.setString(1, mealCategory);

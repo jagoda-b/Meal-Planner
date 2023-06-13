@@ -10,9 +10,10 @@ import java.util.Scanner;
 public class PlanDAO {
     Connection connection;
 
-    public void getConnection(Connection connection) {
+    public PlanDAO(Connection connection) {
         this.connection = connection;
     }
+
 
     public void deletePlan() {
         try (PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE TABLE plan")){

@@ -1,5 +1,11 @@
 package mealplanner;
 
+import mealplanner.meal.Meal;
+import mealplanner.meal.MealCategory;
+import mealplanner.meal.MealDAO;
+import mealplanner.plan.PlanDAO;
+
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,24 +39,55 @@ public class Utility {
         return m.matches();
     }
 
+    public static void menu(MealDAO mealDAO, PlanDAO planDAO, Scanner scanner) throws SQLException {
+        boolean menuFlag = true;
+
+        while (menuFlag){
+            String command = getInfoFromUser("What would you like to do (add, show, plan, exit)?", scanner);
+
+            switch (command) {
+                case "add" :
+                    Meal meal = addCommand(scanner);
+                    mealDAO.addMealtoDB(meal);
+                    break;
+
+                case "show" :
+                    String mealCategory = showCommand(scanner);
+                    mealDAO.showMealCategory(mealCategory);
+                    break;
+
+                case "plan" :
+                    planDAO.createNewPlan();
+
+
+                    break;
+
+                case "exit" :
+                    System.out.println("Bye!");
+                    menuFlag = false;
+            }
+
+        }
+    }
+
     public static Meal addCommand(Scanner scanner)  {
         Meal.MealBuilder mealBuilder = new Meal.MealBuilder();
 
-        String mealCategory = Utility.getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
+        String mealCategory = getInfoFromUser("Which meal do you want to add (breakfast, lunch, dinner)?", scanner);
         while (!Utility.validateMealCategory(mealCategory)){
-            mealCategory =  Utility.getInfoFromUser("Wrong meal category! Choose from: breakfast, lunch, dinner.", scanner);
+            mealCategory =  getInfoFromUser("Wrong meal category! Choose from: breakfast, lunch, dinner.", scanner);
         }
 
 
-        String mealName = Utility.getInfoFromUser("Input the meal's name: ", scanner);
+        String mealName = getInfoFromUser("Input the meal's name: ", scanner);
         while (!Utility.validateMealName(mealName)){
-            mealName =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
+            mealName =  getInfoFromUser("Wrong format. Use letters only!", scanner);
         }
 
 
-        String ingredients = Utility.getInfoFromUser("Input the ingredients: ", scanner);
+        String ingredients = getInfoFromUser("Input the ingredients: ", scanner);
         while (!Utility.validateIngredients(ingredients)){
-            ingredients =  Utility.getInfoFromUser("Wrong format. Use letters only!", scanner);
+            ingredients =  getInfoFromUser("Wrong format. Use letters only!", scanner);
         }
 
         return mealBuilder.addCategory(mealCategory).addName(mealName).addIngredients(ingredients).build();

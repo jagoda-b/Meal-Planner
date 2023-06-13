@@ -1,50 +1,15 @@
-package mealplanner;
+package mealplanner.meal;
 
 import java.sql.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MealDAO {
-
-    private final String dbUrl = "jdbc:postgresql:meals_db";
-    private final String user = "postgres";
-    private final String pass = "1111";
-
     private Connection connection;
 
-
-    protected Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(dbUrl, user, pass);
-            connection.setAutoCommit(true);
-        }
-        createTables();
-        return connection;
+    public MealDAO(Connection connection) {
+        this.connection = connection;
     }
-
-    public void closeConnection() {
-        if (connection != null) {
-            try {
-                if (!connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            connection = null;
-        }
-    }
-
-    public void createTables() {
-
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS meals(category VARCHAR(64), meal VARCHAR(64), meal_id INTEGER);");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS ingredients(ingredient VARCHAR(1024), ingredient_id INT, meal_id INTEGER);");
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void addMealtoDB(Meal meal) throws SQLException {
         PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -94,10 +59,10 @@ public class MealDAO {
 
 
     public  void showMealCategory(String mealCategory) throws SQLException {
-//
-        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals \n" +
-                                                                        "LEFT JOIN ingredients \n" +
-                                                                        "ON meals.meal_id = ingredients.meal_id\n" +
+
+        PreparedStatement getAllMeals = connection.prepareStatement("SELECT * FROM meals " +
+                                                                        "LEFT JOIN ingredients " +
+                                                                        "ON meals.meal_id = ingredients.meal_id " +
                                                                         "WHERE meals.category = ?;",
                                                                         ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         getAllMeals.setString(1, mealCategory);
@@ -128,6 +93,27 @@ public class MealDAO {
 
         getAllMeals.close();
 
+    }
+    
+    public TreeMap<Integer, String> getMeals (String mealCategory) {
+
+        TreeMap<Integer, String> meals = new TreeMap<>();
+         
+        try (PreparedStatement getMeals = connection.prepareStatement("SELECT * FROM meals " +
+                                                                        "WHERE meals.category = ?;")){
+            getMeals.setString(1, mealCategory);
+            ResultSet allMeals = getMeals.executeQuery();
+            while (allMeals.next()){
+                meals.put(allMeals.getInt("meal_id"), allMeals.getString("meal"));
+            }
+            allMeals.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        
+        return meals;
     }
 
 }

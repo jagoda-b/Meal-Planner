@@ -1,4 +1,4 @@
-package mealplanner.Meal;
+package mealplanner.meal;
 
 import java.sql.*;
 import java.util.Map;

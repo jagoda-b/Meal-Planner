@@ -1,8 +1,8 @@
 package mealplanner;
 
-import mealplanner.Meal.Meal;
-import mealplanner.Meal.MealCategory;
-import mealplanner.Meal.MealDAO;
+import mealplanner.meal.Meal;
+import mealplanner.meal.MealCategory;
+import mealplanner.meal.MealDAO;
 
 import java.sql.SQLException;
 import java.util.Scanner;

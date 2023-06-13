@@ -1,4 +1,4 @@
-package mealplanner.Meal;
+package mealplanner.meal;
 
 public enum MealCategory {
     breakfast, lunch, dinner

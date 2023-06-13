@@ -1,7 +1,7 @@
 package mealplanner;
 
 
-import mealplanner.Meal.MealDAO;
+import mealplanner.meal.MealDAO;
 import mealplanner.plan.PlanDAO;
 
 import java.util.Scanner;

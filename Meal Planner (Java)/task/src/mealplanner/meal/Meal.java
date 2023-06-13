@@ -1,4 +1,4 @@
-package mealplanner.Meal;
+package mealplanner.meal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

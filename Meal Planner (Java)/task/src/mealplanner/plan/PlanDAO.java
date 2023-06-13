@@ -1,7 +1,6 @@
 package mealplanner.plan;
 
 import mealplanner.Utility;
-import mealplanner.meal.Meal;
 import mealplanner.meal.MealDAO;
 
 

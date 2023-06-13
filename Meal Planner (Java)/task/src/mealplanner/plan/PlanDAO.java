@@ -6,6 +6,7 @@ import mealplanner.meal.MealDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -13,7 +14,7 @@ public class PlanDAO {
     Connection connection;
     MealDAO mealDAO;
     private List<String> days = List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-    private List<String> mealcategories = List.of("breakfast", "lunch", "dinner");
+    private List<String> mealcategories = List.of("Breakfast", "Lunch", "Dinner");
 
 
     public PlanDAO(Connection connection, MealDAO mealDAO) {
@@ -30,31 +31,35 @@ public class PlanDAO {
         }
     }
 
-    public void createNewPlan() {
+    public void createNewPlan() throws SQLException {
         deletePlan();
 
         for (String day : days) {
             System.out.println(day);
             for (String mealCategory : mealcategories ) {
-                createPlanForDay(day, mealCategory, new Scanner(System.in));
+                createPlanForDay(day, mealCategory.toLowerCase(), new Scanner(System.in));
             }
 
             System.out.println(String.format("Yeah! We planned the meals for %s. %n", day));
         }
 
+        printPlan();
+
     }
 
-    public void createPlanForDay(String day, String mealCategory, Scanner scanner) {
+    public void createPlanForDay(String day, String mealCategory, Scanner scanner) throws SQLException {
         Map<Integer, String> mealsFromCategory = getMealsFromCategory(mealCategory);
         printMeals(mealsFromCategory);
         String question = String.format("Choose the %s for %s from the list above:", mealCategory, day);
         String chosenMeal = Utility.getInfoFromUser(question, scanner);
         int mealId = getMealID(chosenMeal, mealsFromCategory);
         while (mealId < 0 ) {
-            chosenMeal = Utility.getInfoFromUser(question, scanner);
+            chosenMeal = Utility.getInfoFromUser("This meal doesn’t exist. Choose a meal from the list above.", scanner);
             mealId = getMealID(chosenMeal, mealsFromCategory);
         }
         addMealtoPlan(chosenMeal, mealCategory, mealId, day);
+
+
 
     }
 
@@ -96,6 +101,46 @@ public class PlanDAO {
                     .filter(key -> meal.equals(mealsFromCategory.get(key)))
                     .findFirst().get();
         }
+    }
+
+    private String getPlanFromDB(String day, String mealcategory){
+        ResultSet resultSet ;
+        String mealName = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM plan " +
+                                                                                   "WHERE day = ? AND category = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE )) {
+            preparedStatement.setString(1, day);
+            preparedStatement.setString(2, mealcategory.toLowerCase());
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                mealName = resultSet.getString("meal_option");
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            return mealName;
+        }
+
+
+
+    }
+
+    public void printPlan() throws SQLException {
+
+        for (String day : days) {
+            System.out.println(day);
+            for (String mealCategory : mealcategories ) {
+
+                String mealName = getPlanFromDB(day, mealCategory);
+                System.out.println(String.format("%s: %s ", mealCategory, mealName));
+
+            }
+            System.out.println("");
+
+        }
+
     }
 
 

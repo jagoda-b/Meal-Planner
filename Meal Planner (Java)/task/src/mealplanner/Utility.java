@@ -1,5 +1,9 @@
 package mealplanner;
 
+import mealplanner.Meal.Meal;
+import mealplanner.Meal.MealCategory;
+import mealplanner.Meal.MealDAO;
+
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.regex.Matcher;

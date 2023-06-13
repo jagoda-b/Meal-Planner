@@ -1,8 +1,11 @@
 package mealplanner.plan;
 
+import mealplanner.Utility;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class PlanDAO {
     Connection connection;
@@ -22,7 +25,11 @@ public class PlanDAO {
     public void createNewPlan() {
         deletePlan();
 
+    }
 
+    public void createPlanForDay(String day, String mealCategory, Scanner scanner) {
+        String question = String.format("Choose the %s for %s from the list above:", mealCategory, day);
+        Utility.getInfoFromUser(question, scanner);
     }
 
 

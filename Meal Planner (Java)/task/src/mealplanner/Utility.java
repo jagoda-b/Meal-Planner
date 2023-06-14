@@ -41,9 +41,10 @@ public class Utility {
 
     public static void menu(MealDAO mealDAO, PlanDAO planDAO, Scanner scanner) throws SQLException {
         boolean menuFlag = true;
+        boolean planReady = false;
 
         while (menuFlag){
-            String command = getInfoFromUser("What would you like to do (add, show, plan, exit)?", scanner);
+            String command = getInfoFromUser("What would you like to do (add, show, plan, save, exit)?", scanner);
 
             switch (command) {
                 case "add" :
@@ -58,7 +59,17 @@ public class Utility {
 
                 case "plan" :
                     planDAO.createNewPlan();
+                    planReady = true;
                     break;
+
+                case "save" :
+                    if (planReady){
+                        //TODO
+                    } else {
+                        System.out.println("Unable to save. Plan your meals first.");
+                    }
+                    break;
+
 
                 case "exit" :
                     System.out.println("Bye!");

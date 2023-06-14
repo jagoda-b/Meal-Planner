@@ -58,8 +58,6 @@ public class Utility {
 
                 case "plan" :
                     planDAO.createNewPlan();
-
-
                     break;
 
                 case "exit" :

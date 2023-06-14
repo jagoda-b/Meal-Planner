@@ -11,8 +11,9 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class PlanDAO {
-    Connection connection;
-    MealDAO mealDAO;
+    private Connection connection;
+    private MealDAO mealDAO;
+    private Map<String, Integer> ingredients = new TreeMap<>();
     private List<String> days = List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
     private List<String> mealcategories = List.of("Breakfast", "Lunch", "Dinner");
 
@@ -58,12 +59,11 @@ public class PlanDAO {
             mealId = getMealID(chosenMeal, mealsFromCategory);
         }
         addMealtoPlan(chosenMeal, mealCategory, mealId, day);
-
-
+        saveIngredients(mealId);
 
     }
 
-    public void addMealtoPlan(String mealName, String mealCategory, int mealId, String day) {
+    private void addMealtoPlan(String mealName, String mealCategory, int mealId, String day) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO plan " +
                                                                                 "(meal_option, category, meal_id, day)" +
                                                                                 "VALUES ( ?, ?, ?, ? );")) {
@@ -127,7 +127,7 @@ public class PlanDAO {
 
     }
 
-    public void printPlan() throws SQLException {
+    public void printPlan() {
 
         for (String day : days) {
             System.out.println(day);
@@ -140,6 +140,22 @@ public class PlanDAO {
             System.out.println("");
 
         }
+
+    }
+
+    private void saveIngredients(int mealID){
+
+        List<String> mealIngredients = mealDAO.getIngredients(mealID);
+
+        for (String ingredient : mealIngredients ) {
+            if(ingredients.containsKey(ingredient)) {
+                ingredients.replace(ingredient, ingredients.get(ingredient) + 1);
+            }
+            else {
+                ingredients.put(ingredient, 1);
+            }
+        }
+
 
     }
 

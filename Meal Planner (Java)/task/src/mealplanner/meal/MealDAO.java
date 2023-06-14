@@ -122,7 +122,7 @@ public class MealDAO {
 
         List<String> ingredients = new ArrayList<>();
 
-        try (PreparedStatement getMeals = connection.prepareStatement("SELECT * FROM ingredient " +
+        try (PreparedStatement getMeals = connection.prepareStatement("SELECT * FROM ingredients " +
                 "WHERE meal_id = ?;")){
             getMeals.setInt(1, mealID);
             ResultSet allIngredients = getMeals.executeQuery();
@@ -138,6 +138,5 @@ public class MealDAO {
 
         return ingredients;
     }
-
 
 }

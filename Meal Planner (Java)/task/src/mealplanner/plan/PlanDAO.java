@@ -13,7 +13,7 @@ import java.util.*;
 public class PlanDAO {
     private Connection connection;
     private MealDAO mealDAO;
-    Map<String, Integer> ingredients;
+    private Map<String, Integer> ingredients = new TreeMap<>();
     private List<String> days = List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
     private List<String> mealcategories = List.of("Breakfast", "Lunch", "Dinner");
 
@@ -59,8 +59,7 @@ public class PlanDAO {
             mealId = getMealID(chosenMeal, mealsFromCategory);
         }
         addMealtoPlan(chosenMeal, mealCategory, mealId, day);
-
-
+        saveIngredients(mealId);
 
     }
 
@@ -128,7 +127,7 @@ public class PlanDAO {
 
     }
 
-    public void printPlan() throws SQLException {
+    public void printPlan() {
 
         for (String day : days) {
             System.out.println(day);
@@ -144,8 +143,19 @@ public class PlanDAO {
 
     }
 
-    private void saveIngredients(){
-        ingredients = new TreeMap<>();
+    private void saveIngredients(int mealID){
+
+        List<String> mealIngredients = mealDAO.getIngredients(mealID);
+
+        for (String ingredient : mealIngredients ) {
+            if(ingredients.containsKey(ingredient)) {
+                ingredients.replace(ingredient, ingredients.get(ingredient) + 1);
+            }
+            else {
+                ingredients.put(ingredient, 1);
+            }
+        }
+
 
     }
 

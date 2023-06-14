@@ -11,8 +11,9 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class PlanDAO {
-    Connection connection;
-    MealDAO mealDAO;
+    private Connection connection;
+    private MealDAO mealDAO;
+    Map<String, Integer> ingredients;
     private List<String> days = List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
     private List<String> mealcategories = List.of("Breakfast", "Lunch", "Dinner");
 
@@ -63,7 +64,7 @@ public class PlanDAO {
 
     }
 
-    public void addMealtoPlan(String mealName, String mealCategory, int mealId, String day) {
+    private void addMealtoPlan(String mealName, String mealCategory, int mealId, String day) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO plan " +
                                                                                 "(meal_option, category, meal_id, day)" +
                                                                                 "VALUES ( ?, ?, ?, ? );")) {
@@ -140,6 +141,11 @@ public class PlanDAO {
             System.out.println("");
 
         }
+
+    }
+
+    private void saveIngredients(){
+        ingredients = new TreeMap<>();
 
     }
 

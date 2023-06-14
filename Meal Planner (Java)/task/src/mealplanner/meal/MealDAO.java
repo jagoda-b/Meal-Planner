@@ -1,6 +1,8 @@
 package mealplanner.meal;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -95,9 +97,9 @@ public class MealDAO {
 
     }
     
-    public TreeMap<Integer, String> getMeals (String mealCategory) {
+    public Map<Integer, String> getMeals (String mealCategory) {
 
-        TreeMap<Integer, String> meals = new TreeMap<>();
+        Map<Integer, String> meals = new TreeMap<>();
          
         try (PreparedStatement getMeals = connection.prepareStatement("SELECT * FROM meals " +
                                                                         "WHERE meals.category = ?;")){
@@ -115,5 +117,27 @@ public class MealDAO {
         
         return meals;
     }
+
+    public List<String> getIngredients (int mealID) {
+
+        List<String> ingredients = new ArrayList<>();
+
+        try (PreparedStatement getMeals = connection.prepareStatement("SELECT * FROM ingredient " +
+                "WHERE meal_id = ?;")){
+            getMeals.setInt(1, mealID);
+            ResultSet allIngredients = getMeals.executeQuery();
+            while (allIngredients.next()){
+                ingredients.add(allIngredients.getString("ingredient"));
+
+            }
+            allIngredients.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ingredients;
+    }
+
 
 }

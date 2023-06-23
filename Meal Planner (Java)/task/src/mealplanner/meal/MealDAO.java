@@ -31,7 +31,6 @@ public class MealDAO {
             ingredientID = allIngredients.getInt("ingredient_id") + 1;
         }
 
-
         PreparedStatement addMeal = connection.prepareStatement("INSERT INTO meals "
                 + "(category, meal, meal_id)"
                 + " VALUES (?, ?, ?) ");
@@ -70,7 +69,6 @@ public class MealDAO {
         getAllMeals.setString(1, mealCategory);
         ResultSet allMeals = getAllMeals.executeQuery();
 
-
         if (!allMeals.isBeforeFirst()){
             System.out.println("No meals found.");
         }
@@ -78,7 +76,6 @@ public class MealDAO {
             System.out.println("Category: " + mealCategory);
             System.out.println("");
         }
-
 
         while (allMeals.next()) {
 
@@ -92,12 +89,10 @@ public class MealDAO {
             allMeals.previous();
 
         }
-
         getAllMeals.close();
-
     }
     
-    public Map<Integer, String> getMeals (String mealCategory) {
+    public Map<Integer, String> getMeals(String mealCategory) {
 
         Map<Integer, String> meals = new TreeMap<>();
          
@@ -113,8 +108,6 @@ public class MealDAO {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        
-        
         return meals;
     }
 
@@ -128,15 +121,31 @@ public class MealDAO {
             ResultSet allIngredients = getMeals.executeQuery();
             while (allIngredients.next()){
                 ingredients.add(allIngredients.getString("ingredient"));
-
             }
             allIngredients.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-
         return ingredients;
+    }
+
+    public Integer getMealID(String meal) {
+        int mealID = -1;
+
+        try (PreparedStatement getMealID = connection.prepareStatement("SELECT * FROM meals " +
+                "WHERE meal = ?;")){
+            getMealID.setString(1, meal.toLowerCase());
+            ResultSet resultSet = getMealID.executeQuery();
+            resultSet.next();
+            mealID = resultSet.getInt("meal_id");
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return mealID;
     }
 
 }

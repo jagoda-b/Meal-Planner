@@ -13,9 +13,10 @@ import java.util.*;
 public class PlanDAO {
     private Connection connection;
     private MealDAO mealDAO;
-    private Map<String, Integer> ingredients = new TreeMap<>();
+    private Map<String, Integer> XXingredients = new TreeMap<>();
     private List<String> days = List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
     private List<String> mealcategories = List.of("Breakfast", "Lunch", "Dinner");
+    private boolean isReady = false;
 
 
     public PlanDAO(Connection connection, MealDAO mealDAO) {
@@ -45,10 +46,9 @@ public class PlanDAO {
         }
 
         printPlan();
-
     }
 
-    public void createPlanForDay(String day, String mealCategory, Scanner scanner) throws SQLException {
+    public void createPlanForDay(String day, String mealCategory, Scanner scanner) {
         Map<Integer, String> mealsFromCategory = getMealsFromCategory(mealCategory);
         printMeals(mealsFromCategory);
         String question = String.format("Choose the %s for %s from the list above:", mealCategory, day);
@@ -59,7 +59,7 @@ public class PlanDAO {
             mealId = getMealID(chosenMeal, mealsFromCategory);
         }
         addMealtoPlan(chosenMeal, mealCategory, mealId, day);
-        saveIngredients(mealId);
+       // collectIngredients(mealId);
 
     }
 
@@ -74,7 +74,6 @@ public class PlanDAO {
             preparedStatement.setString(4, day);
 
             preparedStatement.executeUpdate();
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,7 +122,24 @@ public class PlanDAO {
             return mealName;
         }
 
+    }
 
+    private List<String> getWholePlanFromDB(){
+        ResultSet resultSet ;
+        List<String> meals = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM plan ", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE )) {
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                meals.add(resultSet.getString("meal_option"));
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            return meals;
+        }
 
     }
 
@@ -138,28 +154,69 @@ public class PlanDAO {
 
             }
             System.out.println("");
-
         }
-
     }
 
-    private void saveIngredients(int mealID){
+    private void collectIngredients(int mealID){
 
         List<String> mealIngredients = mealDAO.getIngredients(mealID);
 
         for (String ingredient : mealIngredients ) {
-            if(ingredients.containsKey(ingredient)) {
-                ingredients.replace(ingredient, ingredients.get(ingredient) + 1);
+            if(XXingredients.containsKey(ingredient)) {
+                XXingredients.replace(ingredient, XXingredients.get(ingredient) + 1);
+
             }
             else {
-                ingredients.put(ingredient, 1);
+                XXingredients.put(ingredient, 1);
+
             }
         }
 
+    }
+
+    public void prepareIngredients() {
+        List<String> plannedMeals = getWholePlanFromDB();
+
+        for (String meal: plannedMeals) {
+            int mealID = mealDAO.getMealID(meal);
+            collectIngredients(mealID);
+        }
 
     }
 
+    public String printIngredients(){
+        StringBuilder sb = new StringBuilder();
+        prepareIngredients();
 
+        for (Map.Entry<String, Integer> ingredient : XXingredients.entrySet()) {
+            sb.append(ingredient.getKey());
+            if (ingredient.getValue() > 1 ) {
+                sb.append(" ").append("x").append(ingredient.getValue());
+            }
+            sb.append("\n");
+        }
 
+        return sb.toString();
+    }
+
+    public Boolean isReady() {
+
+        ResultSet resultSet ;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS recordCount FROM plan ", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE )) {
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            int size = resultSet.getInt("recordCount");
+            if (size > 0 ){
+                isReady = true;
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            return isReady;
+        }
+    }
 
 }

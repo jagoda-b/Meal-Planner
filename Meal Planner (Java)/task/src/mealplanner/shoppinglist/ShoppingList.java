@@ -4,31 +4,43 @@ import mealplanner.Utility;
 import mealplanner.meal.MealDAO;
 import mealplanner.plan.PlanDAO;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.util.Map;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
-import java.util.TreeMap;
+
 
 public class ShoppingList {
-    private MealDAO mealDAO;
-    private PlanDAO planDAO;
 
 
-
-
-
-    public void save(Scanner scanner){
+    public static void save(PlanDAO planDAO, Scanner scanner){
         String fileName = Utility.getInfoFromUser("Input a filename:", scanner);
-        File shoppingList = new File(fileName);
 
+        BufferedWriter output = null;
+        try {
+            File file = new File(fileName);
+            output = new BufferedWriter(new FileWriter(file));
+            output.write(prepareIngredients(planDAO));
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        } finally {
+            if ( output != null ) {
+                try {
+                    output.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        System.out.println("Saved!");
 
     }
 
-    private Map<String, Integer> getIngredients(){
-        Map<String,Integer> ingredients = new TreeMap<>();
+    private static String prepareIngredients(PlanDAO planDAO){
 
-
-        return ingredients;
+        return planDAO.printIngredients();
     }
 
 }

@@ -4,6 +4,7 @@ import mealplanner.meal.Meal;
 import mealplanner.meal.MealCategory;
 import mealplanner.meal.MealDAO;
 import mealplanner.plan.PlanDAO;
+import mealplanner.shoppinglist.ShoppingList;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -59,12 +60,12 @@ public class Utility {
 
                 case "plan" :
                     planDAO.createNewPlan();
-                    planReady = true;
+
                     break;
 
                 case "save" :
-                    if (planReady){
-                        //TODO
+                    if (planDAO.isReady()){
+                        ShoppingList.save(planDAO,scanner);
                     } else {
                         System.out.println("Unable to save. Plan your meals first.");
                     }

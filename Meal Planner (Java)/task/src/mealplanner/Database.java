@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class UtilityDB {
+public class Database {
     private final String dbUrl = "jdbc:postgresql:meals_db";
     private final String user = "postgres";
     private final String pass = "1111";

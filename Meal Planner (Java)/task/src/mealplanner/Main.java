@@ -11,8 +11,8 @@ import java.sql.*;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        UtilityDB utilityDB = new UtilityDB();
-        Connection connection = utilityDB.getConnection();
+        Database database = new Database();
+        Connection connection = database.getConnection();
         MealDAO mealDAO = new MealDAO(connection);
         PlanDAO planDAO = new PlanDAO(connection, mealDAO );
 
@@ -23,7 +23,7 @@ public class Main {
         Utility.menu(mealDAO, planDAO, scanner);
 
         scanner.close();
-        utilityDB.closeConnection();
+        database.closeConnection();
 
     }
 
